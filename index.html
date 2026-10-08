@@ -157,15 +157,18 @@
             align-items: center;
         }
 
-        .main-title {
-            font-size: 1.4rem;
+       .main-title {
+            font-size: 1.05rem; /* Ajustado para que quepa en una sola línea */
             font-weight: 900;
             color: #ffffff;
-            line-height: 1;
-            letter-spacing: 2px;
+            line-height: 1.1;
+            letter-spacing: 1px; /* Espaciado más compacto */
+            white-space: nowrap; /* Evita que salte de línea */
             text-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
             font-family: 'Cinzel', serif;
         }
+
+        
 
         .subtitle-tag {
             font-size: 0.52rem;
@@ -175,17 +178,19 @@
             text-transform: uppercase;
         }
 
-        .play-btn {
+       .play-btn {
             background: linear-gradient(135deg, #38bdf8, #0284c7);
             border: none;
             color: #ffffff;
-            padding: 6px 18px;
+            padding: 6px 12px; /* Ligeramente más compacto a los lados */
             font-size: 0.62rem;
             font-weight: 900;
             cursor: pointer;
             border-radius: 12px;
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
             transition: transform 0.1s ease;
+            white-space: nowrap;
+            flex-shrink: 0; /* Evita que el botón se aplaste */
         }
 
         .play-btn:active {
@@ -326,8 +331,8 @@
         <footer class="mobile-footer">
             <div class="title-row">
                 <div>
-                    <span class="subtitle-tag">Un viaje para ti</span>
-                    <h1 class="main-title">MARÍA</h1>
+                    <span class="subtitle-tag">Un viaje para ti María</span>
+                    <h1 class="main-title">Frieren & Himmel</h1>
                 </div>
                 <button class="play-btn" id="play-trigger">Reproducir</button>
             </div>
@@ -336,7 +341,7 @@
                 <audio id="audio-element" src="frieren-ost.mp3" preload="auto"></audio>
 
                 <div class="player-info">
-                    <span class="track-title">Frieren & Himmel - En cualquier momento, en cualquier lugar</span>
+                    <span class="track-title">En cualquier momento, en cualquier lugar</span>
                     <span class="time-display" id="time-track">0:00 / 0:00</span>
                 </div>
                 
