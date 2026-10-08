@@ -78,7 +78,7 @@
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
         }
 
-        /* Área central: Sin parpadeo azul en navegadores móviles */
+        /* Área central: Imagen y Canvas de pétalos */
         .mobile-center-stage {
             position: relative;
             flex-grow: 1;
@@ -123,30 +123,6 @@
             pointer-events: none;
             user-select: none;
             -webkit-user-drag: none;
-        }
-
-        /* Rayos de luz diagonales */
-        .light-beams {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0) 30%, 
-                rgba(56, 189, 248, 0.18) 45%, 
-                rgba(255, 255, 255, 0.35) 50%, 
-                rgba(56, 189, 248, 0.18) 55%, 
-                rgba(255, 255, 255, 0) 70%);
-            transform: rotate(25deg);
-            pointer-events: none;
-            z-index: 15;
-            animation: move-beams 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes move-beams {
-            0% { transform: translateY(-15%) rotate(20deg); opacity: 0.6; }
-            100% { transform: translateY(15%) rotate(30deg); opacity: 1; }
         }
 
         /* Canvas de pétalos flotando al frente */
@@ -265,7 +241,7 @@
             box-shadow: 0 0 8px #38bdf8;
         }
 
-        /* Efectos interactivos precisos */
+        /* Efectos interactivos */
         .touch-ripple {
             position: absolute;
             width: 12px;
@@ -283,21 +259,22 @@
             100% { width: 90px; height: 90px; opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
         }
 
+        /* Corazón ubicado debajo del mensaje */
         .floating-heart {
             position: absolute;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             user-select: none;
-            animation: float-heart-up 1.2s ease-out forwards;
+            animation: float-heart-under 1.2s ease-out forwards;
             pointer-events: none;
             z-index: 60;
             text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
             transform: translate(-50%, -50%);
         }
 
-        @keyframes float-heart-up {
-            0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
-            100% { transform: translate(-50%, -80px) scale(1.3); opacity: 0; }
-        }
+       @keyframes float-heart-under {
+    0% { transform: translate(-50%, 0) scale(0.7); opacity: 1; }
+    100% { transform: translate(-50%, 8px) scale(1.15); opacity: 0; }
+}
 
         .touch-floating-msg {
             position: absolute;
@@ -319,7 +296,7 @@
         @keyframes float-msg-up {
             0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; }
             20% { opacity: 1; }
-            100% { transform: translate(-50%, -60px) scale(1); opacity: 0; }
+            100% { transform: translate(-50%, -50px) scale(1); opacity: 0; }
         }
 
         @keyframes float-character { 
@@ -337,13 +314,11 @@
             <span class="greeting-title">¡Buenos días! ☀️</span>
         </header>
 
-        <!-- Centro: Área interactiva únicamente en la imagen con rayos de luz -->
+        <!-- Centro: Área interactiva en la imagen -->
         <div class="mobile-center-stage" id="image-stage">
             <div class="character-root">
                 <img src="frieren.png" alt="Frieren y Himmel" class="character-img" draggable="false">
             </div>
-            <!-- Rayos de luz diagonales -->
-            <div class="light-beams"></div>
             <canvas id="sakura"></canvas>
         </div>
 
@@ -361,7 +336,7 @@
                 <audio id="audio-element" src="frieren-ost.mp3" preload="auto"></audio>
 
                 <div class="player-info">
-                    <span class="track-title">Frieren & Himmel - Tema Romántico</span>
+                    <span class="track-title">Frieren & Himmel - En cualquier momento, en cualquier lugar</span>
                     <span class="time-display" id="time-track">0:00 / 0:00</span>
                 </div>
                 
@@ -389,13 +364,18 @@
         ];
 
         const imageStage = document.getElementById('image-stage');
+        let lastTriggerTime = 0;
 
         function handleStageTouch(clientX, clientY) {
+            const now = Date.now();
+            if (now - lastTriggerTime < 350) return;
+            lastTriggerTime = now;
+
             const rect = imageStage.getBoundingClientRect();
             const x = clientX - rect.left;
             const y = clientY - rect.top;
 
-            // Onda precisa en el punto exacto
+            // 1. Onda precisa en el punto de contacto
             const ripple = document.createElement('div');
             ripple.className = 'touch-ripple';
             ripple.style.left = `${x}px`;
@@ -403,37 +383,30 @@
             imageStage.appendChild(ripple);
             setTimeout(() => ripple.remove(), 600);
 
-            // Corazón flotante
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.innerHTML = '❤️';
-            heart.style.left = `${x}px`;
-            heart.style.top = `${y}px`;
-            imageStage.appendChild(heart);
-            setTimeout(() => heart.remove(), 1200);
-
-            // Mensaje motivador flotante
+            // 2. Mensaje motivador flotante (arriba del toque)
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
             const msgBubble = document.createElement('div');
             msgBubble.className = 'touch-floating-msg';
             msgBubble.textContent = randomMsg;
             msgBubble.style.left = `${x}px`;
-            msgBubble.style.top = `${y - 15}px`;
+            msgBubble.style.top = `${y - 20}px`;
             imageStage.appendChild(msgBubble);
             setTimeout(() => msgBubble.remove(), 1400);
+
+            // 3. Corazón flotante ubicado debajo del mensaje
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = `${x}px`;
+         heart.style.top = `${y + 2}px`;
+            imageStage.appendChild(heart);
+            setTimeout(() => heart.remove(), 1200);
         }
 
-        imageStage.addEventListener('click', function(e) {
+        // Listener unificado sin duplicación de eventos
+        imageStage.addEventListener('pointerdown', function(e) {
             handleStageTouch(e.clientX, e.clientY);
         });
-
-        // Soporte táctil optimizado para móviles
-        imageStage.addEventListener('touchstart', function(e) {
-            if (e.touches && e.touches.length > 0) {
-                const touch = e.touches[0];
-                handleStageTouch(touch.clientX, touch.clientY);
-            }
-        }, { passive: true });
 
         // Canvas 2D de pétalos de maná
         window.requestAnimFrame = (function () {
