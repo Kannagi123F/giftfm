@@ -36,6 +36,23 @@
             -webkit-user-select: none;
         }
 
+        /* Fondo difuminado detrás de todo */
+        .bg-blur {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: url('fondo-difuminado.png') center / cover no-repeat;
+            transform: scale(1.1);
+        }
+
+        /* Capa oscura suave para que el texto se lea bien */
+        .bg-blur::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.35);
+        }
+
         .mobile-container {
             width: 92%;
             height: 94dvh;
@@ -47,7 +64,7 @@
             justify-content: space-between;
             padding: 10px 12px 12px 12px;
             position: relative;
-            background-color: #030712;
+            background-color: rgba(3, 7, 18, 0.15);
             border: 2px solid var(--border-glow);
             border-radius: 24px;
             box-shadow: 
@@ -157,18 +174,16 @@
             align-items: center;
         }
 
-       .main-title {
-            font-size: 1.05rem; /* Ajustado para que quepa en una sola línea */
+        .main-title {
+            font-size: 1.05rem;
             font-weight: 900;
             color: #ffffff;
             line-height: 1.1;
-            letter-spacing: 1px; /* Espaciado más compacto */
-            white-space: nowrap; /* Evita que salte de línea */
+            letter-spacing: 1px;
+            white-space: nowrap;
             text-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
             font-family: 'Cinzel', serif;
         }
-
-        
 
         .subtitle-tag {
             font-size: 0.52rem;
@@ -178,11 +193,11 @@
             text-transform: uppercase;
         }
 
-       .play-btn {
+        .play-btn {
             background: linear-gradient(135deg, #38bdf8, #0284c7);
             border: none;
             color: #ffffff;
-            padding: 6px 12px; /* Ligeramente más compacto a los lados */
+            padding: 6px 12px;
             font-size: 0.62rem;
             font-weight: 900;
             cursor: pointer;
@@ -190,7 +205,7 @@
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
             transition: transform 0.1s ease;
             white-space: nowrap;
-            flex-shrink: 0; /* Evita que el botón se aplaste */
+            flex-shrink: 0;
         }
 
         .play-btn:active {
@@ -276,10 +291,10 @@
             transform: translate(-50%, -50%);
         }
 
-       @keyframes float-heart-under {
-    0% { transform: translate(-50%, 0) scale(0.7); opacity: 1; }
-    100% { transform: translate(-50%, 8px) scale(1.15); opacity: 0; }
-}
+        @keyframes float-heart-under {
+            0% { transform: translate(-50%, 0) scale(0.7); opacity: 1; }
+            100% { transform: translate(-50%, 8px) scale(1.15); opacity: 0; }
+        }
 
         .touch-floating-msg {
             position: absolute;
@@ -311,6 +326,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Fondo difuminado -->
+    <div class="bg-blur"></div>
 
     <div class="mobile-container">
         
@@ -403,7 +421,7 @@
             heart.className = 'floating-heart';
             heart.innerHTML = '❤️';
             heart.style.left = `${x}px`;
-         heart.style.top = `${y + 2}px`;
+            heart.style.top = `${y + 2}px`;
             imageStage.appendChild(heart);
             setTimeout(() => heart.remove(), 1200);
         }
